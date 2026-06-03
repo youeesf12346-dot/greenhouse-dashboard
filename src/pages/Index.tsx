@@ -17,88 +17,89 @@ import { useEffect, useState } from "react";
 
 const Index = () => {
 
-const { dir, t } = useLanguage();
+  const { dir, t } = useLanguage();
 
-const [data,setData]=useState(null);
+  const [data, setData] = useState({
+    sensorData: {
+      humidity: 0,
+      temperature: 0,
+      ph: 0,
+      nitrogen: 0,
+      phosphorus: 0,
+      potassium: 0,
+      soilMoisture: 0
+    },
+    decision: []
+  });
 
-useEffect(() => {
+  useEffect(() => {
 
-  const fetchData = async () => {
+    const fetchData = async () => {
 
-    try {
+      try {
 
-      const res = await axios.get(
-"https://greenhouse-dashboard-production-f98c.up.railway.app/api/decision");
+        const res = await axios.get(
+          "https://greenhouse-dashboard-production-f98c.up.railway.app/api/decision"
+        );
 
-      setData(res.data);
+        setData(res.data);
 
-    } catch (error) {
+      } catch (error) {
 
-      console.log("Server offline");
+        console.log(error);
 
-      // لو السيرفر وقع
-      setData({
-        sensorData: {
-          humidity: 0,
-          temperature: 0,
-          ph: 0,
-          nitrogen: 0,
-          phosphorus: 0,
-          potassium: 0,
-          soilMoisture: 0
-        },
-        decision: []
-      });
+      }
 
-    }
+    };
 
-  };
+    fetchData();
 
-  fetchData();
+    const interval = setInterval(fetchData, 2000);
 
-  const interval = setInterval(fetchData, 2000);
+    return () => clearInterval(interval);
 
-  return () => clearInterval(interval);
+  }, []);
 
-}, []);
-const isOffline=
-data?.sensorData?.online===false;
+  const isOffline =
+    data?.sensorData?.online === false;
 
-return(
+  return (
 
-<div className="min-h-screen bg-background" dir={dir}>
-  <Navbar />
-<main className="container mx-auto px-4 py-8 space-y-10 max-w-7xl">
+    <div className="min-h-screen bg-background" dir={dir}>
+      <Navbar />
 
-  <HeroSection data={data}/>
+      <main className="container mx-auto px-4 py-8 space-y-10 max-w-7xl">
 
-  <AlertBox data={data}/>
+        <HeroSection data={data} />
 
-  <SensorCards sensorData={data?.sensorData}/>
-  
-    <CameraSection />
+        <AlertBox data={data} />
 
-  <Charts sensorData={data?.sensorData}/>
+        <SensorCards sensorData={data?.sensorData} />
 
-<AIStats />
-  <SystemDecisions data={data?.decision}/>
+        <CameraSection />
 
-  <CropRecommendation data={data}/>
+        <Charts sensorData={data?.sensorData} />
 
-  <FertilizerRecommendation data={data}/>
+        <AIStats />
 
-  <IrrigationStatus data={data}/>
+        <SystemDecisions data={data?.decision} />
 
-  <EngineerValidation data={data}/>
+        <CropRecommendation data={data} />
 
-  <footer className="text-center py-6 text-xs text-muted-foreground border-t">
-    {t("footer.text")}
-  </footer>
+        <FertilizerRecommendation data={data} />
 
-</main>
-</div>
+        <IrrigationStatus data={data} />
 
-);
+        <EngineerValidation data={data} />
+
+        <footer className="text-center py-6 text-xs text-muted-foreground border-t">
+          {t("footer.text")}
+        </footer>
+
+      </main>
+    </div>
+
+  );
 
 };
 
