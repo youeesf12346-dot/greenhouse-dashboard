@@ -47,16 +47,14 @@ const fetchStats = async()=>{
 try{
 
 const statsRes = await axios.get(
-"http://localhost:5000/api/feedback/stats"
-);
+"https://greenhouse-dashboard-production-f98c.up.railway.app/api/feedback/stats");
 
 setStats(statsRes.data);
 
 
 
 const feedRes = await axios.get(
-"http://localhost:5000/api/feedback/all"
-);
+"https://greenhouse-dashboard-production-f98c.up.railway.app/api/feedback/all");
 
 setFeedbacks(feedRes.data);
 

@@ -28,8 +28,7 @@ useEffect(() => {
     try {
 
       const res = await axios.get(
-        "http://localhost:5000/api/decision"
-      );
+"https://greenhouse-dashboard-production-f98c.up.railway.app/api/decision");
 
       setData(res.data);
 

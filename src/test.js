@@ -6,7 +6,7 @@ try{
 
 await axios.post(
 
-"http://localhost:5000/api/update",
+"https://greenhouse-dashboard-production-f98c.up.railway.app",
 
 {
 
